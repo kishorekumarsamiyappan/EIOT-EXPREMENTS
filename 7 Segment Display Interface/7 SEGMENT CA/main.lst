@@ -1,0 +1,131 @@
+CCS PCM C Compiler, Version 5.008, 5967               09-Jul-25 09:37
+
+               Filename:   K:\5th Sem\EIOT\EX 2\7 SEGMENT CA\main.lst
+
+               ROM used:   77 words (1%)
+                           Largest free fragment is 2048
+               RAM used:   7 (2%) at main() level
+                           8 (2%) worst case
+               Stack used: 1 locations
+               Stack size: 8
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   029
+0003:  NOP
+.................... #include <16F877A.h> 
+.................... //////// Standard Header file for the PIC16F877A device //////////////// 
+.................... #device PIC16F877A 
+0004:  BCF    0A.0
+0005:  BCF    0A.1
+0006:  BCF    0A.2
+0007:  ADDWF  02,F
+0008:  RETLW  C0
+0009:  RETLW  F9
+000A:  RETLW  A4
+000B:  RETLW  B0
+000C:  RETLW  99
+000D:  RETLW  92
+000E:  RETLW  82
+000F:  RETLW  F8
+0010:  RETLW  80
+0011:  RETLW  90
+....................  
+.................... #list 
+....................  
+.................... #device ADC=16 
+....................  
+.................... #FUSES NOWDT                    // No Watch Dog Timer 
+.................... #FUSES PUT                      // Power Up Timer 
+.................... #FUSES NOBROWNOUT               // No brownout reset 
+.................... #FUSES NOLVP                    // No low voltage programming 
+....................  
+.................... #use delay(crystal=4MHz) 
+0012:  MOVLW  23
+0013:  MOVWF  04
+0014:  BCF    03.7
+0015:  MOVF   00,W
+0016:  BTFSC  03.2
+0017:  GOTO   026
+0018:  MOVLW  01
+0019:  MOVWF  78
+001A:  CLRF   77
+001B:  DECFSZ 77,F
+001C:  GOTO   01B
+001D:  DECFSZ 78,F
+001E:  GOTO   01A
+001F:  MOVLW  4A
+0020:  MOVWF  77
+0021:  DECFSZ 77,F
+0022:  GOTO   021
+0023:  GOTO   024
+0024:  DECFSZ 00,F
+0025:  GOTO   018
+0026:  BCF    0A.3
+0027:  BCF    0A.4
+0028:  GOTO   047 (RETURN)
+.................... #use FIXED_IO( C_outputs=PIN_C7,PIN_C6,PIN_C5,PIN_C4,PIN_C3,PIN_C2,PIN_C1,PIN_C0 ) 
+....................  
+.................... const unsigned int8 segment_code[10] = { 
+....................    0xC0, // 0 
+....................    0xF9, // 1 
+....................    0xA4, // 2 
+....................    0xB0, // 3 
+....................    0x99, // 4 
+....................    0x92, // 5 
+....................    0x82, // 6 
+....................    0xF8, // 7 
+....................    0x80, // 8 
+....................    0x90  // 9 
+.................... }; 
+....................  
+.................... void main() { 
+0029:  MOVF   03,W
+002A:  ANDLW  1F
+002B:  MOVWF  03
+002C:  BSF    03.5
+002D:  BSF    1F.0
+002E:  BSF    1F.1
+002F:  BSF    1F.2
+0030:  BCF    1F.3
+0031:  MOVLW  07
+0032:  MOVWF  1C
+0033:  BCF    03.7
+....................    int i; 
+....................    while(TRUE) { 
+....................       for(i = 0; i < 10; i++) { 
+0034:  BCF    03.5
+0035:  CLRF   21
+0036:  MOVF   21,W
+0037:  SUBLW  09
+0038:  BTFSS  03.0
+0039:  GOTO   04B
+....................          output_c(segment_code[i]);  // Output digit to 7-segment 
+003A:  MOVF   21,W
+003B:  CALL   004
+003C:  MOVWF  22
+003D:  BSF    03.5
+003E:  CLRF   07
+003F:  BCF    03.5
+0040:  MOVF   22,W
+0041:  MOVWF  07
+....................          delay_ms(1000);             // Wait 1 second 
+0042:  MOVLW  04
+0043:  MOVWF  22
+0044:  MOVLW  FA
+0045:  MOVWF  23
+0046:  GOTO   012
+0047:  DECFSZ 22,F
+0048:  GOTO   044
+0049:  INCF   21,F
+004A:  GOTO   036
+....................       } 
+004B:  GOTO   035
+....................    } 
+.................... } 
+....................  
+004C:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F31   XT NOWDT PUT NOBROWNOUT NOLVP NOCPD NOWRT NODEBUG NOPROTECT

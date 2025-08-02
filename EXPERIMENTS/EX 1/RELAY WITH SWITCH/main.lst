@@ -1,0 +1,78 @@
+CCS PCM C Compiler, Version 5.008, 5967               16-Jul-25 09:36
+
+               Filename:   K:\5th Sem\EIOT\EX 3\RELAY\main.lst
+
+               ROM used:   33 words (0%)
+                           Largest free fragment is 2048
+               RAM used:   6 (2%) at main() level
+                           6 (2%) worst case
+               Stack used: 0 locations
+               Stack size: 8
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   004
+0003:  NOP
+.................... #include <16F877A.h> 
+.................... //////// Standard Header file for the PIC16F877A device //////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+.................... #device ADC=16 
+....................  
+.................... #FUSES NOWDT                    //No Watch Dog Timer 
+.................... #FUSES PUT                      //Power Up Timer 
+.................... #FUSES NOBROWNOUT               //No brownout reset 
+.................... #FUSES NOLVP                    //No low voltage prgming, B3(PIC16) or B5(PIC18) used for I/O 
+....................  
+.................... #use delay(crystal=4MHz) 
+.................... #use FIXED_IO( B_outputs=PIN_B0 ) 
+.................... #define LED   PIN_B0 
+.................... #define SWITCH1   PIN_D0 
+....................  
+.................... void main() 
+0004:  MOVF   03,W
+0005:  ANDLW  1F
+0006:  MOVWF  03
+0007:  BSF    03.5
+0008:  BSF    1F.0
+0009:  BSF    1F.1
+000A:  BSF    1F.2
+000B:  BCF    1F.3
+000C:  MOVLW  07
+000D:  MOVWF  1C
+000E:  BCF    03.7
+.................... { 
+....................  
+....................    while(TRUE) 
+....................    { 
+....................      if (input(SWITCH1) == 0)   
+000F:  BSF    08.0
+0010:  BCF    03.5
+0011:  BTFSC  08.0
+0012:  GOTO   019
+....................          output_low(LED);      
+0013:  MOVLW  FE
+0014:  BSF    03.5
+0015:  MOVWF  06
+0016:  BCF    03.5
+0017:  BCF    06.0
+0018:  GOTO   01E
+....................       else 
+....................          output_high(LED);  
+0019:  MOVLW  FE
+001A:  BSF    03.5
+001B:  MOVWF  06
+001C:  BCF    03.5
+001D:  BSF    06.0
+001E:  BSF    03.5
+001F:  GOTO   00F
+....................    } 
+....................  
+.................... } 
+0020:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F31   XT NOWDT PUT NOBROWNOUT NOLVP NOCPD NOWRT NODEBUG NOPROTECT

@@ -1,0 +1,31 @@
+#include <16F877A.h>
+#device ADC=16
+
+#FUSES NOWDT
+#FUSES PUT
+#FUSES NOBROWNOUT
+#FUSES NOLVP
+
+#use delay(crystal=4000000)  // 4MHz
+
+#use FIXED_IO(B_outputs=PIN_B0,PIN_B1,PIN_B2,PIN_B3,PIN_B4,PIN_B5,PIN_B6,PIN_B7)
+
+void main()
+{
+   while(TRUE)
+   {
+      
+      output_b(0x01); delay_ms(300);  // LED1
+output_b(0x02); delay_ms(300);  // LED2
+output_b(0x04); delay_ms(300);  // LED3
+output_b(0x08); delay_ms(300);  // LED4
+output_b(0x10); delay_ms(300);  // LED5
+output_b(0x20); delay_ms(300);  // LED6
+output_b(0x40); delay_ms(300);  // LED7
+output_b(0x80); delay_ms(300);  // LED8
+output_b(0x00); delay_ms(300);  // All OFF
+
+      
+   }
+}
+

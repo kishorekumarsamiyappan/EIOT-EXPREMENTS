@@ -1,0 +1,27 @@
+#include <16F877A.h>
+#device ADC=16
+
+#FUSES NOWDT                    // No Watch Dog Timer
+#FUSES PUT                      // Power Up Timer
+#FUSES NOBROWNOUT               // No brownout reset
+#FUSES NOLVP                    // No low voltage programming
+
+#use delay(crystal=4MHz)
+#use FIXED_IO(B_outputs=PIN_B0)  // Only B0 is output, rest are inputs by default
+
+#define LED     PIN_B0
+#define SWITCH  PIN_D0
+
+void main() {
+   set_tris_d(0xFF);  // Port D as input (especially for SWITCH)
+   output_low(LED);   // Start with LED OFF
+
+   while(TRUE) {
+      if(input(SWITCH)) {
+         output_high(LED);  // Turn ON LED when switch is pressed
+      } else {
+         output_low(LED);   // Turn OFF LED when switch is not pressed
+      }
+   }
+}
+

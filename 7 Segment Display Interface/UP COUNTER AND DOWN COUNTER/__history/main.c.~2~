@@ -1,0 +1,43 @@
+#include <16F877A.h>
+#device ADC=16
+
+#FUSES NOWDT                    // No Watch Dog Timer
+#FUSES PUT                      // Power Up Timer
+#FUSES NOBROWNOUT               // No brownout reset
+#FUSES NOLVP                    // No low voltage programming
+
+#use delay(crystal=4MHz)
+#use FIXED_IO(B_outputs=PIN_B6,PIN_B5,PIN_B4,PIN_B3,PIN_B2,PIN_B1,PIN_B0)
+#define SWITCH1   PIN_C0
+
+const unsigned int8 seg_code[10] = {
+   0x3F, // 0
+   0x06, // 1
+   0x5B, // 2
+   0x4F, // 3
+   0x66, // 4
+   0x6D, // 5
+   0x7D, // 6
+   0x07, // 7
+   0x7F, // 8
+   0x6F  // 9
+};
+
+void main() {
+   int count = 0;
+
+   while(TRUE) {
+      output_b(seg_code[count]);
+
+      if (input(SWITCH1)) {
+         count++;
+         if (count > 9) count = 0;
+      } else {
+         count--;
+         if (count < 0) count = 9;
+      }
+
+      delay_ms(1000);
+   }
+}
+
