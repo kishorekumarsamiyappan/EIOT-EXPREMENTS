@@ -1,0 +1,55 @@
+#include <16F877A.h>
+#device ADC=16
+
+#FUSES NOWDT                    //No Watch Dog Timer
+#FUSES PUT                      //Power Up Timer
+#FUSES NOBROWNOUT               //No brownout reset
+#FUSES NOLVP                    //No low voltage programming
+
+#use delay(crystal=4MHz)
+#use FIXED_IO( B_outputs=PIN_B6,PIN_B5,PIN_B4,PIN_B3,PIN_B2,PIN_B1,PIN_B0 )
+
+#define SWITCH1 PIN_C0  // Switch connected to RC0
+
+// 7-segment display values for 0–9 (common cathode)
+const int8 segment_values[10] = {
+   0b00111111,  // 0
+   0b00000110,  // 1
+   0b01011011,  // 2
+   0b01001111,  // 3
+   0b01100110,  // 4
+   0b01101101,  // 5
+   0b01111101,  // 6
+   0b00000111,  // 7
+   0b01111111,  // 8
+   0b01101111   // 9
+};
+
+void main()
+{
+   int8 count = 0;
+   output_b(segment_values[count]); // Display initial value
+
+   while(TRUE)
+   {
+      if(input(SWITCH1))  // If switch connected to 5V
+      {
+         // UP Counter
+         count++;
+         if(count > 9)
+            count = 0;
+      }
+      else
+      {
+         // DOWN Counter
+         if(count == 0)
+            count = 9;
+         else
+            count--;
+      }
+
+      output_b(segment_values[count]); // Show on 7-segment
+      delay_ms(500); // Debounce + visible delay
+   }
+}
+
