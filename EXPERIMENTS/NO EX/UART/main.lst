@@ -1,0 +1,316 @@
+CCS PCM C Compiler, Version 5.008, 5967               20-Aug-25 09:34
+
+               Filename:   K:\5th Sem\EIOT\EXPERIMENTS\NO EX\UART\main.lst
+
+               ROM used:   247 words (3%)
+                           Largest free fragment is 2048
+               RAM used:   8 (2%) at main() level
+                           12 (3%) worst case
+               Stack used: 1 locations
+               Stack size: 8
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   090
+0003:  NOP
+.................... #include <16F877A.h> 
+.................... //////// Standard Header file for the PIC16F877A device //////////////// 
+.................... #device PIC16F877A 
+0004:  DATA CC,22
+0005:  DATA 44,10
+0006:  DATA 4F,27
+0007:  DATA 0D,05
+0008:  DATA 00,00
+0009:  DATA CC,22
+000A:  DATA 44,10
+000B:  DATA 4F,23
+000C:  DATA C6,06
+000D:  DATA 0A,00
+000E:  DATA CC,22
+000F:  DATA 44,10
+0010:  DATA 42,26
+0011:  DATA 49,27
+0012:  DATA 4B,10
+0013:  DATA CD,27
+0014:  DATA C4,22
+0015:  DATA 0D,05
+0016:  DATA 00,01
+0017:  DATA 55,37
+0018:  DATA E4,32
+0019:  DATA E6,34
+001A:  DATA EE,32
+001B:  DATA 64,10
+001C:  DATA C3,37
+001D:  DATA ED,36
+001E:  DATA 61,37
+001F:  DATA E4,06
+0020:  DATA 0A,00
+*
+002E:  MOVF   0B,W
+002F:  MOVWF  23
+0030:  BCF    0B.7
+0031:  BSF    03.5
+0032:  BSF    03.6
+0033:  BSF    0C.7
+0034:  BSF    0C.0
+0035:  NOP
+0036:  NOP
+0037:  BCF    03.5
+0038:  MOVF   0C,W
+0039:  ANDLW  7F
+003A:  BTFSC  03.2
+003B:  GOTO   077
+003C:  BCF    03.6
+003D:  MOVWF  24
+003E:  BSF    03.6
+003F:  MOVF   0D,W
+0040:  BCF    03.6
+0041:  MOVWF  25
+0042:  BSF    03.6
+0043:  MOVF   0F,W
+0044:  BCF    03.6
+0045:  MOVWF  26
+0046:  MOVF   24,W
+0047:  BTFSS  0C.4
+0048:  GOTO   047
+0049:  MOVWF  19
+004A:  MOVF   25,W
+004B:  BSF    03.6
+004C:  MOVWF  0D
+004D:  BCF    03.6
+004E:  MOVF   26,W
+004F:  BSF    03.6
+0050:  MOVWF  0F
+0051:  BSF    03.5
+0052:  BSF    0C.7
+0053:  BSF    0C.0
+0054:  NOP
+0055:  NOP
+0056:  BCF    03.5
+0057:  RLF    0C,W
+0058:  RLF    0E,W
+0059:  ANDLW  7F
+005A:  BTFSC  03.2
+005B:  GOTO   077
+005C:  BCF    03.6
+005D:  MOVWF  24
+005E:  BSF    03.6
+005F:  MOVF   0D,W
+0060:  BCF    03.6
+0061:  MOVWF  25
+0062:  BSF    03.6
+0063:  MOVF   0F,W
+0064:  BCF    03.6
+0065:  MOVWF  26
+0066:  MOVF   24,W
+0067:  BTFSS  0C.4
+0068:  GOTO   067
+0069:  MOVWF  19
+006A:  MOVF   25,W
+006B:  BSF    03.6
+006C:  MOVWF  0D
+006D:  BCF    03.6
+006E:  MOVF   26,W
+006F:  BSF    03.6
+0070:  MOVWF  0F
+0071:  INCF   0D,F
+0072:  BTFSC  03.2
+0073:  INCF   0F,F
+0074:  BCF    03.6
+0075:  GOTO   031
+0076:  BSF    03.6
+0077:  BCF    03.6
+0078:  BTFSC  23.7
+0079:  BSF    0B.7
+007A:  RETURN
+....................  
+.................... #list 
+....................  
+.................... #device ADC=16 
+....................  
+.................... #FUSES NOWDT, PUT, NOBROWNOUT, NOLVP 
+.................... #use delay(crystal=4MHz) 
+007B:  MOVLW  23
+007C:  MOVWF  04
+007D:  BCF    03.7
+007E:  MOVF   00,W
+007F:  BTFSC  03.2
+0080:  GOTO   08F
+0081:  MOVLW  01
+0082:  MOVWF  78
+0083:  CLRF   77
+0084:  DECFSZ 77,F
+0085:  GOTO   084
+0086:  DECFSZ 78,F
+0087:  GOTO   083
+0088:  MOVLW  4A
+0089:  MOVWF  77
+008A:  DECFSZ 77,F
+008B:  GOTO   08A
+008C:  GOTO   08D
+008D:  DECFSZ 00,F
+008E:  GOTO   081
+008F:  RETURN
+.................... #use rs232(baud=9600, parity=N, xmit=PIN_C6, rcv=PIN_C7, bits=8, stream=PORT1, errors) 
+*
+0021:  BTFSS  0C.5
+0022:  GOTO   021
+0023:  MOVF   18,W
+0024:  MOVWF  20
+0025:  MOVF   1A,W
+0026:  MOVWF  78
+0027:  BTFSS  20.1
+0028:  GOTO   02B
+0029:  BCF    18.4
+002A:  BSF    18.4
+002B:  BCF    0A.3
+002C:  BCF    0A.4
+002D:  GOTO   0AB (RETURN)
+....................  
+.................... int blink_mode = 0; 
+....................  
+.................... void main() { 
+*
+0090:  MOVF   03,W
+0091:  ANDLW  1F
+0092:  MOVWF  03
+0093:  CLRF   20
+0094:  MOVLW  19
+0095:  BSF    03.5
+0096:  MOVWF  19
+0097:  MOVLW  A6
+0098:  MOVWF  18
+0099:  MOVLW  90
+009A:  BCF    03.5
+009B:  MOVWF  18
+009C:  CLRF   21
+009D:  BSF    03.5
+009E:  BSF    1F.0
+009F:  BSF    1F.1
+00A0:  BSF    1F.2
+00A1:  BCF    1F.3
+00A2:  MOVLW  07
+00A3:  MOVWF  1C
+00A4:  BCF    03.7
+....................    char c; 
+....................  
+....................    output_low(PIN_B0);    
+00A5:  BCF    06.0
+00A6:  BCF    03.5
+00A7:  BCF    06.0
+....................  
+....................    while(TRUE) { 
+....................       if (kbhit(PORT1)) {       
+00A8:  BTFSS  0C.5
+00A9:  GOTO   0E4
+....................          c = fgetc(PORT1);       
+00AA:  GOTO   021
+00AB:  MOVF   78,W
+00AC:  MOVWF  22
+....................          if (c == '1') { 
+00AD:  MOVF   22,W
+00AE:  SUBLW  31
+00AF:  BTFSS  03.2
+00B0:  GOTO   0BE
+....................             blink_mode = 0;               // stop blinking 
+00B1:  CLRF   21
+....................             output_high(PIN_B0);    
+00B2:  BSF    03.5
+00B3:  BCF    06.0
+00B4:  BCF    03.5
+00B5:  BSF    06.0
+....................             printf("LED ON\r\n"); 
+00B6:  MOVLW  04
+00B7:  BSF    03.6
+00B8:  MOVWF  0D
+00B9:  MOVLW  00
+00BA:  MOVWF  0F
+00BB:  BCF    03.6
+00BC:  CALL   02E
+....................          } 
+00BD:  GOTO   0E4
+....................          else if (c == '0') { 
+00BE:  MOVF   22,W
+00BF:  SUBLW  30
+00C0:  BTFSS  03.2
+00C1:  GOTO   0CF
+....................             blink_mode = 0;               // stop blinking 
+00C2:  CLRF   21
+....................             output_low(PIN_B0);     
+00C3:  BSF    03.5
+00C4:  BCF    06.0
+00C5:  BCF    03.5
+00C6:  BCF    06.0
+....................             printf("LED OFF\r\n"); 
+00C7:  MOVLW  09
+00C8:  BSF    03.6
+00C9:  MOVWF  0D
+00CA:  MOVLW  00
+00CB:  MOVWF  0F
+00CC:  BCF    03.6
+00CD:  CALL   02E
+....................          } 
+00CE:  GOTO   0E4
+....................          else if(c == '2'){ 
+00CF:  MOVF   22,W
+00D0:  SUBLW  32
+00D1:  BTFSS  03.2
+00D2:  GOTO   0DD
+....................             blink_mode = 1;               // enable blink mode 
+00D3:  MOVLW  01
+00D4:  MOVWF  21
+....................             printf("LED BLINK MODE\r\n"); 
+00D5:  MOVLW  0E
+00D6:  BSF    03.6
+00D7:  MOVWF  0D
+00D8:  MOVLW  00
+00D9:  MOVWF  0F
+00DA:  BCF    03.6
+00DB:  CALL   02E
+....................          } 
+00DC:  GOTO   0E4
+....................          else { 
+....................             printf("Undefined Command\r\n"); 
+00DD:  MOVLW  17
+00DE:  BSF    03.6
+00DF:  MOVWF  0D
+00E0:  MOVLW  00
+00E1:  MOVWF  0F
+00E2:  BCF    03.6
+00E3:  CALL   02E
+....................          } 
+....................       } 
+....................  
+....................       // handle blinking if mode is enabled 
+....................       if(blink_mode) { 
+00E4:  MOVF   21,F
+00E5:  BTFSC  03.2
+00E6:  GOTO   0F5
+....................          output_high(PIN_B0); 
+00E7:  BSF    03.5
+00E8:  BCF    06.0
+00E9:  BCF    03.5
+00EA:  BSF    06.0
+....................          delay_ms(100); 
+00EB:  MOVLW  64
+00EC:  MOVWF  23
+00ED:  CALL   07B
+....................          output_low(PIN_B0);  
+00EE:  BSF    03.5
+00EF:  BCF    06.0
+00F0:  BCF    03.5
+00F1:  BCF    06.0
+....................          delay_ms(100); 
+00F2:  MOVLW  64
+00F3:  MOVWF  23
+00F4:  CALL   07B
+....................       } 
+00F5:  GOTO   0A8
+....................    } 
+.................... } 
+....................  
+00F6:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F31   XT NOWDT PUT NOBROWNOUT NOLVP NOCPD NOWRT NODEBUG NOPROTECT

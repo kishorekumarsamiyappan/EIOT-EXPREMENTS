@@ -1,0 +1,74 @@
+#include <16F877A.h>
+#device ADC=10
+
+// Fuses
+#FUSES NOWDT        // No Watch Dog Timer
+#FUSES PUT          // Power Up Timer
+#FUSES NOBROWNOUT   // No brownout reset
+#FUSES NOLVP        // No low voltage programming
+
+#use delay(crystal=4MHz)
+#use i2c(Master, Fast, sda=PIN_C4, scl=PIN_C3)
+
+// LCD pin configuration
+#define LCD_ENABLE_PIN  PIN_D0
+#define LCD_RS_PIN      PIN_D1
+#define LCD_RW_PIN      PIN_D2
+#define LCD_DATA4       PIN_D4
+#define LCD_DATA5       PIN_D5
+#define LCD_DATA6       PIN_D6
+#define LCD_DATA7       PIN_D7   
+
+#include <lcd.c>
+
+#define bcd_to_dec(x)  (((x >> 4) * 10) + (x & 0x0F))
+
+void main() {
+    int sec, min, hrs;
+    char ampm[3];   // "AM" or "PM"
+
+    lcd_init();
+
+    while(TRUE) {
+        
+        i2c_start();
+        i2c_write(0xD0);     
+        i2c_write(0x00);     
+
+        i2c_start();
+        i2c_write(0xD1);     
+
+        sec = i2c_read(1);  
+        min = i2c_read(1);   
+        hrs = i2c_read(0);   
+
+        i2c_stop();
+
+        // Convert BCD to Decimal
+        sec = bcd_to_dec(sec);
+        min = bcd_to_dec(min);
+        hrs = bcd_to_dec(hrs);
+
+        // 24-hour to 12-hour conversion
+        if(hrs == 0) {
+            hrs = 12;
+            strcpy(ampm, "AM");
+        }
+        else if(hrs < 12) {
+            strcpy(ampm, "AM");
+        }
+        else if(hrs == 12) {
+            strcpy(ampm, "PM");
+        }
+        else {
+            hrs = hrs - 12;
+            strcpy(ampm, "PM");
+        }
+
+        // Display on LCD
+        lcd_gotoxy(1,1);
+        printf(lcd_putc, "%02d:%02d:%02d %s", hrs, min, sec, ampm);
+
+        delay_ms(1000);
+    }
+}

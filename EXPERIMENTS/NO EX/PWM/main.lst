@@ -1,0 +1,75 @@
+CCS PCM C Compiler, Version 5.008, 5967               08-Sep-25 21:09
+
+               Filename:   K:\5th Sem\EIOT\EXPERIMENTS\NO EX\PWM\main.lst
+
+               ROM used:   34 words (0%)
+                           Largest free fragment is 2048
+               RAM used:   6 (2%) at main() level
+                           6 (2%) worst case
+               Stack used: 0 locations
+               Stack size: 8
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   004
+0003:  NOP
+.................... #include <16F877A.h> 
+.................... //////// Standard Header file for the PIC16F877A device //////////////// 
+.................... #device PIC16F877A 
+....................  
+.................... #list 
+....................  
+.................... #fuses NOWDT, HS, PUT, NOLVP 
+.................... #use delay(clock=4MHZ)    
+.................... void main() { 
+0004:  MOVF   03,W
+0005:  ANDLW  1F
+0006:  MOVWF  03
+0007:  MOVLW  FF
+0008:  MOVWF  20
+0009:  BSF    03.5
+000A:  BSF    1F.0
+000B:  BSF    1F.1
+000C:  BSF    1F.2
+000D:  BCF    1F.3
+000E:  MOVLW  07
+000F:  MOVWF  1C
+0010:  BCF    03.7
+....................    // Step 1: Configure CCP1 as PWM 
+....................    setup_ccp1(CCP_PWM); 
+0011:  BCF    03.5
+0012:  BCF    20.2
+0013:  MOVF   20,W
+0014:  BSF    03.5
+0015:  MOVWF  07
+0016:  BCF    03.5
+0017:  BCF    07.2
+0018:  MOVLW  0C
+0019:  MOVWF  17
+....................     
+....................    // Step 2: Configure Timer2 for PWM frequency 
+....................    // Formula: PWM freq = Fosc / (4 * (PR2+1) * Prescaler) 
+....................    setup_timer_2(T2_DIV_BY_16, 255, 1); // Example: PR2=255, prescaler=16 
+001A:  MOVLW  00
+001B:  MOVWF  78
+001C:  IORLW  06
+001D:  MOVWF  12
+001E:  MOVLW  FF
+001F:  BSF    03.5
+0020:  MOVWF  12
+....................  
+....................    // Step 3: Set duty cycle 
+....................  //  set_pwm1_duty(512);   // 50% duty cycle (Range 0-1023 for 10-bit) 
+....................  
+....................  //  while(TRUE) { 
+....................  //     delay_ms(1000); 
+....................  //     set_pwm1_duty(512); 
+.................... //      delay_ms(1000); 
+....................  //l  } 
+.................... } 
+....................  
+0021:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F72   HS NOWDT PUT BROWNOUT NOLVP NOCPD NOWRT NODEBUG NOPROTECT

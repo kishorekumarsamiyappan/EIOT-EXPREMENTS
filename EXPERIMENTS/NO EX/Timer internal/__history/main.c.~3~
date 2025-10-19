@@ -1,0 +1,53 @@
+#include <16F877A.h>
+#device ADC=10
+
+#FUSES NOWDT        // No Watch Dog Timer
+#FUSES PUT          // Power Up Timer
+#FUSES NOLVP        // No low voltage programming
+
+#use delay(crystal=4MHz)
+
+#define LCD_ENABLE_PIN PIN_B2
+#define LCD_RS_PIN PIN_B0
+#define LCD_RW_PIN PIN_B1
+#define LCD_DATA4 PIN_B3
+#define LCD_DATA5 PIN_B4
+#define LCD_DATA6 PIN_B5
+#define LCD_DATA7 PIN_B6
+
+#include <lcd.c>
+
+int ms = 0, sec = 0, min = 0;
+
+#INT_TIMER1
+void TIMER1_isr(void) 
+{
+   ms++;
+}
+
+void main()
+{
+   lcd_init();
+   setup_timer_1(T1_INTERNAL | T1_DIV_BY_1);
+
+   enable_interrupts(INT_TIMER1);
+   enable_interrupts(GLOBAL);
+
+   while(TRUE)
+   {
+      TIMER1_isr() ;
+      if(ms > 15)
+      {
+      ms = 0;
+      sec++;
+      if(sec > 59)
+      {
+         sec = 0;
+         min++;
+      }
+      }
+      lcd_gotoxy(1,1);
+      printf(lcd_putc,"\fmin:%d sec:%d", min, sec);
+      delay_ms(200); 
+   }
+}

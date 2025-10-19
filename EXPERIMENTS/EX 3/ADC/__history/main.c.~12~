@@ -1,0 +1,50 @@
+#include <16F877A.h>
+#device ADC=10
+
+#FUSES NOWDT           // No Watch Dog Timer
+#FUSES PUT             // Power Up Timer
+#FUSES NOBROWNOUT      // No brownout reset
+#FUSES NOLVP           // No low voltage programming
+
+#use delay(crystal=4MHz)
+#use FIXED_IO(C_outputs=PIN_C0)   // Use only if you're manually controlling output pins
+
+#define LCD_ENABLE_PIN PIN_B0
+#define LCD_RS_PIN     PIN_B1
+#define LCD_RW_PIN     PIN_B2
+#define LCD_DATA4      PIN_B4
+#define LCD_DATA5      PIN_B5
+#define LCD_DATA6      PIN_B6
+#define LCD_DATA7      PIN_B7
+
+#define SWITCH1        PIN_C0     // Removed '=' symbol
+
+#include <lcd.c>
+
+void main() {
+   int16 value;
+
+   lcd_init();
+   setup_adc_ports(AN0);  
+    setup_adc_ports(AN1);// Enable AN0 and AN1
+   setup_adc(ADC_CLOCK_INTERNAL);
+ 
+
+   while (TRUE) {
+      if (input(SWITCH1) == 0) {
+         set_adc_channel(0);           // AN0
+         delay_ms(10);
+         value = read_adc();  
+         lcd_gotoxy(1, 1);
+         printf(lcd_putc, "ADC1: %04Lu   ", value);  // Clear old chars with spaces
+      } else {
+         set_adc_channel(1);           // AN1
+         delay_ms(10);
+         value = read_adc();  
+         lcd_gotoxy(1, 2);
+         printf(lcd_putc, "ADC2: %04Lu   ", value);  // Clear old chars with spaces
+      }
+      delay_ms(200);
+   }
+}
+

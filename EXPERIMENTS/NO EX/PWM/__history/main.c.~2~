@@ -1,0 +1,24 @@
+#include <16F877A.h>
+#fuses NOWDT, HS, PUT, NOLVP
+#use delay(clock=4MHZ)   // 20 MHz crystal
+
+void main() {
+   // Step 1: Configure CCP1 as PWM
+   setup_ccp1(CCP_PWM);
+   
+   // Step 2: Configure Timer2 for PWM frequency
+   // Formula: PWM freq = Fosc / (4 * (PR2+1) * Prescaler)
+   setup_timer_2(T2_DIV_BY_16, 255, 1); // Example: PR2=255, prescaler=16
+
+   // Step 3: Set duty cycle
+   set_pwm1_duty(512);   // 50% duty cycle (Range 0-1023 for 10-bit)
+
+   while(TRUE) {
+      // You can change duty cycle dynamically
+      delay_ms(1000);
+      set_pwm1_duty(256);  // 25%
+      delay_ms(1000);
+      set_pwm1_duty(768);  // 75%
+   }
+}
+

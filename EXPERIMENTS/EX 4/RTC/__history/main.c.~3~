@@ -1,0 +1,76 @@
+#include <16F877A.h>
+#device ADC=16
+#FUSES NOWDT                    //No Watch Dog Timer
+#FUSES PUT                      //Power Up Timer
+#FUSES NOBROWNOUT               //No brownout reset
+#FUSES NOLVP                    //No low voltage programming
+#use delay(crystal=4MHz)
+#use i2c(Master,Fast,sda=PIN_C4,scl=PIN_C3)
+
+#define LCD_ENABLE_PIN PIN_B2
+#define LCD_RS_PIN PIN_B0
+#define LCD_RW_PIN PIN_B1
+#define LCD_DATA4 PIN_B4
+#define LCD_DATA5 PIN_B5
+#define LCD_DATA6 PIN_B6
+#define LCD_DATA7 PIN_B7
+#include <lcd.c>
+
+byte sec=0x40, min=0x00, hr=0x71; 
+byte hrs, am_pm; 
+
+void write_time(){ 
+   i2c_start(); 
+   i2c_write(0xD0);       
+   i2c_write(0x00);       
+   i2c_write(sec); 
+   i2c_write(min); 
+   i2c_write(hr); 
+   i2c_stop(); 
+} 
+
+
+byte read_rtc(byte add){ 
+   byte data;
+   i2c_start(); 
+   i2c_write(0xD0);       
+   i2c_write(add);        
+   i2c_start(); 
+   i2c_write(0xD1);       
+   data = i2c_read(0); 
+   i2c_stop(); 
+   return data; 
+}
+
+
+byte bcd_to_decimal(byte bcd){
+   return ((bcd >> 4) * 10) + (bcd & 0x0F);
+}
+
+void main() 
+{ 
+   lcd_init(); 
+   write_time();   
+
+   while(TRUE) 
+   { 
+      sec = read_rtc(0); 
+      min = read_rtc(1); 
+      hr  = read_rtc(2); 
+      
+      hrs = bcd_to_decimal(hr & 0x1F); 
+      lcd_gotoxy(1,1); 
+      printf(lcd_putc,"Time: %02u:%02u:%02u", 
+             hrs, bcd_to_decimal(min), bcd_to_decimal(sec)); 
+      
+      am_pm = hr & 0x20;                                       
+      lcd_gotoxy(1,2);
+      if (am_pm == 0x20) { 
+         printf(lcd_putc,"PM"); 
+      } else { 
+         printf(lcd_putc,"AM"); 
+      } 
+      delay_ms(500); 
+   } 
+}
+

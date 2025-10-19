@@ -1,0 +1,60 @@
+#include <16F877A.h>
+#device ADC=10
+
+// Fuses
+#FUSES NOWDT        // No Watch Dog Timer
+#FUSES PUT          // Power Up Timer
+#FUSES NOBROWNOUT   // No brownout reset
+#FUSES NOLVP        // No low voltage programming
+
+#use delay(crystal=4MHz)
+#use i2c(Master, Fast, sda=PIN_C4, scl=PIN_C3)
+
+// LCD pin configuration
+#define LCD_ENABLE_PIN  PIN_D0
+#define LCD_RS_PIN      PIN_D1
+#define LCD_RW_PIN      PIN_D2
+#define LCD_DATA4       PIN_D4
+#define LCD_DATA5       PIN_D5
+#define LCD_DATA6       PIN_D6
+#define LCD_DATA7       PIN_D7
+
+#include <lcd.c>
+
+// BCD to Decimal conversion macro
+#define bcd_to_dec(x)  (((x >> 4) * 10) + (x & 0x0F))
+
+// ---------------- Main Program ----------------
+void main() {
+    int sec, min, hrs;
+
+    lcd_init();
+
+    while(TRUE) {
+        // Set DS1307 pointer to 0x00 (seconds register)
+        i2c_start();
+        i2c_write(0xD0);     // Write mode
+        i2c_write(0x00);     // Start from register 0x00
+
+        i2c_start();
+        i2c_write(0xD1);     // Read mode
+
+        sec = i2c_read(1);   // Read seconds, ACK
+        min = i2c_read(1);   // Read minutes, ACK
+        hrs = i2c_read(0);   // Read hours, NACK (last byte)
+
+        i2c_stop();
+
+        // Convert BCD to decimal
+        sec = bcd_to_dec(sec);
+        min = bcd_to_dec(min);
+        hrs = bcd_to_dec(hrs);
+
+        // Display on LCD
+        lcd_gotoxy(1,1);
+        printf(lcd_putc, "\f%02d:%02d:%02d", hrs, min, sec);
+
+        delay_ms(1000);
+    }
+}
+

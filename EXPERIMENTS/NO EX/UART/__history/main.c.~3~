@@ -1,0 +1,31 @@
+#include <16F877A.h>
+#device ADC=16
+
+#FUSES NOWDT, PUT, NOBROWNOUT, NOLVP
+#use delay(crystal=4MHz)
+#use rs232(baud=9600, parity=N, xmit=PIN_C6, rcv=PIN_C7, bits=8, stream=PORT1, errors)
+
+void main() {
+   char c;
+   set_tris_b(0x00);        
+   output_low(PIN_B0);      
+
+   while(TRUE) {
+      if (kbhit(PORT1)) {
+         c = fgetc(PORT1);
+
+         if (c == '1') {
+            output_high(PIN_B0);
+            printf("LED ON\r\n");
+         }
+         else if (c == '0') {
+            output_low(PIN_B0);
+            printf("LED OFF\r\n");
+         }
+         else {
+            printf("Unknown command: %c\r\n", c);
+         }
+      }
+   }
+}
+
